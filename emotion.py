@@ -82,10 +82,10 @@ def extract_face_features(gray, detected_faces, coord, offset_coefficients=(0.07
 suzy = cv2.imread('dataset/image.jpeg')
 plt.imshow(cv2.cvtColor(suzy, cv2.COLOR_BGR2RGB))
 
-def calculate_emotion():
+def calculate_emotion(image):
     model = load_model('emotion_recognition.h5')
     # 원본이미지 확인
-    face = cv2.imread('./dataset/happy.jpeg')
+    face = cv2.imread(image)
 
     # 얼굴 추출
     gray, detected_faces, coord = detect_face(face)
@@ -98,29 +98,3 @@ def calculate_emotion():
 
     for i in range(output_data.shape[1]):
         print(f'{emotion_array[i]}: {(output_data[0][i] / sum(output_data[0]))*100}')
-    result = np.argmax(output_data)
-
-    # 결과 문자로 변환
-    if result == 0:
-        emotion = 'angry'
-    elif result == 1:
-        emotion = 'disgust'
-    elif result == 2:
-        emotion = 'fear'
-    elif result == 3:
-        emotion = 'happy'
-    elif result == 4:
-        emotion = 'sad'
-    elif result == 5:
-        emotion = 'surprise'
-    elif result == 6:
-        emotion = 'neutral'
-        
-    # 시각화
-    plt.subplot(121)
-    plt.title("Original Face")
-    plt.imshow(cv2.cvtColor(face, cv2.COLOR_BGR2RGB))
-
-    plt.subplot(122)
-    plt.title(f"Extracted Face : {emotion}")
-    plt.imshow(face_zoom[0])
