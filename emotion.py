@@ -69,6 +69,8 @@ def calculate_emotion(frame):
     face_zoom = extract_face_features(gray, detected_faces, coord)
 
     # 모델 추론
+    if(face_zoom == []):
+        return 0
     input_data = np.reshape(face_zoom[0].flatten(), (1, 48, 48, 1))
     output_data = model.predict(input_data)
     

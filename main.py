@@ -43,14 +43,14 @@ if __name__ == "__main__":
             frame_count = 0
             sec += 1
 
-            eyetracking_score += eyetracking.calculate_eyetracking(gray)
-            emotion_score = emotion.calculate_emotion(gray)
+            eyetracking_score += eyetracking.calculate_eyetracking(gray, frame)
+            emotion_score = emotion.calculate_emotion(frame)
             score = round(eyetracking_score , 4) * 0.8 + round(emotion_score , 4) * 0.2
             score = score * 2 - 1
             concentrate_score[sec] = score
             eyetracking_score, emotion_score = 0.0, 0.0
         else:
-            eyetracking_score += eyetracking.calculate_eyetracking(gray)
+            eyetracking_score += eyetracking.calculate_eyetracking(gray, frame)
         
         cv2.imshow("Frame", frame)
         key = cv2.waitKey(1)

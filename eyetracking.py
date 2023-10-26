@@ -288,20 +288,20 @@ def count_cheating(_duration, _cause):
 
     if short_cheating_count == max_short_cheating:
         s = datetime.now().strftime("%Y%m%d%H%M%S")
-        f = open(path + filename + s + ".txt", 'w')
+        #f = open(path + filename + s + ".txt", 'w')
         warning_count += 1
-        f.write("짧은 경고 5회 누적 + " + str(_cause))
-        f.close()
+        #f.write("짧은 경고 5회 누적 + " + str(_cause))
+        #f.close()
         print("짧은 경고 5회 누적")
         short_cheating_count = 0
 
     if long_cheating_count == max_long_cheating:
         print("긴 경고 1회 누적!")
         s = datetime.now().strftime("%Y%m%d%H%M%S")
-        f = open(path + filename + s + ".txt", 'w')
+        #f = open(path + filename + s + ".txt", 'w')
         warning_count += 1
-        f.write("긴 경고 1회 누적 + " + str(_cause))
-        f.close()
+        #f.write("긴 경고 1회 누적 + " + str(_cause))
+        #f.close()
         long_cheating_count = 0
 
 
@@ -313,10 +313,10 @@ def warn_no_face(_duration):
     if _duration > no_face_time:
         print("얼굴 감지 안됨 경고")
         s = datetime.now().strftime("%Y%m%d%H%M%S")
-        f = open(path + filename + s + ".txt", 'w')
+        #f = open(path + filename + s + ".txt", 'w')
         warning_count += 1
-        f.write("{:.1f} 초간 얼굴 감지 안됨 경고 + 5".format(_duration))
-        f.close()
+        #f.write("{:.1f} 초간 얼굴 감지 안됨 경고 + 5".format(_duration))
+        #f.close()
         print("{:.1f} 초간 얼굴 감지 안됨 경고 + 5".format(_duration))
         print("얼굴 감지 안됨 !!!")
 
@@ -325,7 +325,7 @@ def warn_no_face(_duration):
 """"""     # MAIN FUNCTION #     """"""
 """""""""""""""""""""""""""""""""""""""
 
-def calculate_eyetracking(frame):
+def calculate_eyetracking(gray, frame):
 
     global num_frames, eyetracking_score, wrong_eye_direction, wrong_head_direction
     
@@ -356,7 +356,7 @@ def calculate_eyetracking(frame):
     margin_head = 0.5
 
     # 계산
-    faces = detector(frame)
+    faces = detector(gray)
     num_faces = 0
 
     if faces:
@@ -365,18 +365,18 @@ def calculate_eyetracking(frame):
         eyetracking_score -= 1/30
     for face in faces:
         num_faces += 1
-        landmarks = predictor(frame, face)
+        landmarks = predictor(gray, face)
 
         # 일정 시간 이상 얼굴 탐지 안되면 경고
-        duration = time.time() - start_time_face
-        start_time_face = time.time()
-        if not num_frames == 0:
-            warn_no_face(duration)
+        # duration = time.time() - start_time_face
+        # start_time_face = time.time()
+        # if not num_frames == 0:
+        #     warn_no_face(duration)
 
         # 보는 방향 감지
         # 오른쪽 -> 커진다 / 왼쪽 -> 작아진다
-        gaze_ratio_left_eye = get_gaze_ratio([36, 37, 38, 39, 40, 41], landmarks, frame, frame) # 원래 gray, frame
-        gaze_ratio_right_eye = get_gaze_ratio([42, 43, 44, 45, 46, 47], landmarks, frame, frame) # 원래 gray, frame
+        gaze_ratio_left_eye = get_gaze_ratio([36, 37, 38, 39, 40, 41], landmarks, gray, frame) # 원래 gray, frame
+        gaze_ratio_right_eye = get_gaze_ratio([42, 43, 44, 45, 46, 47], landmarks, gray, frame) # 원래 gray, frame
         gaze_ratio = (gaze_ratio_left_eye + gaze_ratio_right_eye) / 2
         eye_direction_sum += gaze_ratio
 
