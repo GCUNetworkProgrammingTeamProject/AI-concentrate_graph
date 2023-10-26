@@ -3,7 +3,6 @@ import emotion
 import cv2
 import os
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 from urllib import request
 
@@ -18,6 +17,7 @@ concentrate_score = {}
 
 
 # shape_predictor_68_face_landmarks.dat 파일 없으면 다운로드
+# 오류있음 나중에수정
 def check_dat():
     if(os.path.exists(path + dat)):
         return
@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
             eyetracking_score += eyetracking.calculate_eyetracking(gray)
             emotion_score = emotion.calculate_emotion(gray)
-            score = eyetracking_score * 0.8 + emotion_score * 0.2
+            score = round(eyetracking_score , 4) * 0.8 + round(emotion_score , 4) * 0.2
             score = score * 2 - 1
             concentrate_score[sec] = score
             eyetracking_score, emotion_score = 0.0, 0.0
@@ -52,7 +52,7 @@ if __name__ == "__main__":
             eyetracking_score += eyetracking.calculate_eyetracking(gray)
         
         cv2.imshow("Frame", frame)
-        key = cv2.waitKey(0)
+        key = cv2.waitKey(1)
 
         # ESC or 'q' 입력시 프로그램 종료
         if key == 27 or key == 113:
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     
     # 그래프
     # plt.figure(figsize=[8,6])
-    plt.plot(concentrate_score.keys,concentrate_score.values,'r',linewidth=2.0)
+    plt.plot(concentrate_score.keys(),concentrate_score.values(),'r',linewidth=2.0)
     plt.legend(['concentrate score'],fontsize=18)
     plt.xlabel('sec',fontsize=16)
     plt.ylabel('score',fontsize=16)

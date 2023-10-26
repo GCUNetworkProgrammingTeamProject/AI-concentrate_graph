@@ -3,12 +3,9 @@
 
 # 데이터 확인
 import numpy as np
-import matplotlib.pyplot as plt
-
 # Detect Face
 import cv2
 from scipy.ndimage import zoom
-
 # Model
 from keras.models import load_model
 
