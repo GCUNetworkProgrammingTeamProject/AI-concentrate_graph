@@ -34,6 +34,8 @@ if __name__ == "__main__":
 
     while True:
         _, frame = cap.read()
+        if(frame is None): # 비디오일때 오류해결
+            break
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         # 얼굴 인식 부분
         num_faces = 0
@@ -48,6 +50,7 @@ if __name__ == "__main__":
             score = round(eyetracking_score , 4) * 0.8 + round(emotion_score , 4) * 0.2
             score = score * 2 - 1
             concentrate_score[sec] = score
+            print('score: ',score)
             eyetracking_score, emotion_score = 0.0, 0.0
         else:
             eyetracking_score += eyetracking.calculate_eyetracking(gray, frame)
@@ -66,6 +69,7 @@ if __name__ == "__main__":
     plt.xlabel('sec',fontsize=16)
     plt.ylabel('score',fontsize=16)
     plt.title('concentration graph',fontsize=16)
+    plt.show()
 
     # 종료
     cap.release()
