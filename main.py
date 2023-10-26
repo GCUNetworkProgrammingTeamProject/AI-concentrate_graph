@@ -8,12 +8,12 @@ import matplotlib.pyplot as plt
 from urllib import request
 
 
-path = "~/Desktop/AI-concentrate_graph/"
+path = "/Users/jihyeokchoi/Desktop/AI-concentrate_graph/data/"
 dat = "shape_predictor_68_face_landmarks.dat"
 remote_dat = "https://github.com/italojs/facial-landmarks-recognition/blob/master/shape_predictor_68_face_landmarks.dat"
 
 
-emotion_score, eyetracking_score, sec = 0
+emotion_score, eyetracking_score, sec, frame_count = 0.0, 0.0, 0, 0
 concentrate_score = {}
 
 
@@ -30,8 +30,8 @@ if __name__ == "__main__":
     check_dat()
     
     cap = cv2.VideoCapture(0)
-    while True:
 
+    while True:
         _, frame = cap.read()
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         # 얼굴 인식 부분
@@ -47,7 +47,7 @@ if __name__ == "__main__":
             score = eyetracking_score * 0.8 + emotion_score * 0.2
             score = score * 2 - 1
             concentrate_score[sec] = score
-            eyetracking_score, emotion_score = 0
+            eyetracking_score, emotion_score = 0.0, 0.0
         else:
             eyetracking_score += eyetracking.calculate_eyetracking(gray)
         

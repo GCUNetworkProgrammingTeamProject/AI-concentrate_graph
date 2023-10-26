@@ -64,9 +64,6 @@ def extract_face_features(gray, detected_faces, coord, offset_coefficients=(0.07
         
     return new_face
 
-suzy = cv2.imread('dataset/image.jpeg')
-plt.imshow(cv2.cvtColor(suzy, cv2.COLOR_BGR2RGB))
-
 def calculate_emotion(frame):
     model = load_model('emotion_recognition.h5')
     

@@ -41,8 +41,8 @@ max_short_cheating = 5  # 짧은 시간 부정행위 횟수
 max_long_cheating = 1   # 짧은 시간 부정행위 횟수
 criteria_time = 5       # 짧은 시간 긴 시간 나누는 기준초
 
-path = "~/Desktop/AI-concentrate_graph/" # path 변경
-path_identification = "~/Desktop/AI-concentrate_graph/"
+path = "/Users/jihyeokchoi/Desktop/AI-concentrate_graph/" # path 변경
+path_identification = "/Users/jihyeokchoi/Desktop/AI-concentrate_graph/"
 filename = "video_"
 
 frame_count = 0
