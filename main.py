@@ -38,14 +38,15 @@ if __name__ == "__main__":
         num_faces = 0
         frame_count += 1
         if frame_count == 30:
-            # 30프레임이 채워지면 끝
+            # 30프레임이 채워지면 1초 가정..?
             frame_count = 0
             sec += 1
 
             eyetracking_score += eyetracking.calculate_eyetracking(gray)
             emotion_score = emotion.calculate_emotion(gray)
-            concentrate_score[sec] = eyetracking_score * 0.8 + emotion_score * 0.2
-
+            score = eyetracking_score * 0.8 + emotion_score * 0.2
+            score = score * 2 - 1
+            concentrate_score[sec] = score
             eyetracking_score, emotion_score = 0
         else:
             eyetracking_score += eyetracking.calculate_eyetracking(gray)

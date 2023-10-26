@@ -329,7 +329,7 @@ def warn_no_face(_duration):
 """"""     # MAIN FUNCTION #     """"""
 """""""""""""""""""""""""""""""""""""""
 
-def calculate_eyetracking():
+def calculate_eyetracking(frame):
 
     global num_frames, frame_count, eyetracking_score, wrong_eye_direction, wrong_head_direction
     
@@ -361,92 +361,68 @@ def calculate_eyetracking():
     margin_eye = 0.9
     margin_head = 0.5
 
-    while True:
-        _, frame = cap.read()
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = detector(gray)
-        num_faces = 0
-        # 얼굴 인식 부분
+    # 계산
+    faces = frame
+    num_faces = 0
+
+    frame_count += 1
+    if frame_count == 30:
+        # 30프레임이 채워지면 평균 집중도를 계산하고 초기화
+        frame_count = 0
+        eyetracking_score = round(eyetracking_score, 4)
+        eyetracking_score = 0
+
+    if faces:
+        eyetracking_score += 1/30
+    else:
+        eyetracking_score -= 1/30
+    for face in faces:
+        num_faces += 1
+        landmarks = predictor(gray, face)
+
+        # 일정 시간 이상 얼굴 탐지 안되면 경고
+        duration = time.time() - start_time_face
+        start_time_face = time.time()
+        if not num_frames == 0:
+            warn_no_face(duration)
+
+        # 보는 방향 감지
+        # 오른쪽 -> 커진다 / 왼쪽 -> 작아진다
+        gaze_ratio_left_eye = get_gaze_ratio([36, 37, 38, 39, 40, 41], landmarks, gray, frame)
+        gaze_ratio_right_eye = get_gaze_ratio([42, 43, 44, 45, 46, 47], landmarks, gray, frame)
+        gaze_ratio = (gaze_ratio_left_eye + gaze_ratio_right_eye) / 2
+        eye_direction_sum += gaze_ratio
+
+        # 고개 돌리는 방향 감지
+        head_direction = get_head_angle_ratio([27, 28, 29, 30, 31, 32, 33, 34, 35], landmarks, frame)
+        direction = head_direction[0]
+        direction_ratio = head_direction[1]
+
+        """# 눈을 추적하며 깜박임 감지
+        if get_blinking_ratio(landmarks) > 3.7:  # 숫자가 높아질수록 엄격하게 감지
+            print("눈 깜빡임")"""
+
+        # 눈동자가 인가된 범위를 벗어나면 경고
+        warn_eye_direction(criteria_finished, gaze_ratio, eye_direction_criteria, margin_eye)
+
+        # 고개가 인가된 범위를 벗어나면 경고
+        warn_head_direction(criteria_finished, head_direction_criteria, head_direction, margin_head)
 
 
+        # 최초 100프레임동안 고개, 눈동자 기준설정
+        if not criteria_finished:
+            print("기준 설정")
+            head_direction_criteria, eye_direction_criteria, criteria_finished, num_frames \
+                = set_criteria(direction, head_direction_sum,
+                               criteria_finished, direction_ratio, eye_direction_sum)
+
+
+        if (wrong_eye_direction or wrong_head_direction):
+            eyetracking_score -= 2/30
     
-        frame_count += 1
-        if frame_count == 30:
-            # 30프레임이 채워지면 평균 집중도를 계산하고 초기화
-            frame_count = 0
-            eyetracking_score = round(eyetracking_score, 4)
-            print(f"concentration_score : {eyetracking_score}")
-            eyetracking_score = 0
-
-        if faces:
-            eyetracking_score += 1/30
-        else:
-            eyetracking_score -= 1/30
-        for face in faces:
-            num_faces += 1
-            landmarks = predictor(gray, face)
-
-            # 일정 시간 이상 얼굴 탐지 안되면 경고
-            duration = time.time() - start_time_face
-            start_time_face = time.time()
-            if not num_frames == 0:
-                warn_no_face(duration)
-
-            # 보는 방향 감지
-            # 오른쪽 -> 커진다 / 왼쪽 -> 작아진다
-            gaze_ratio_left_eye = get_gaze_ratio([36, 37, 38, 39, 40, 41], landmarks, gray, frame)
-            gaze_ratio_right_eye = get_gaze_ratio([42, 43, 44, 45, 46, 47], landmarks, gray, frame)
-            gaze_ratio = (gaze_ratio_left_eye + gaze_ratio_right_eye) / 2
-            eye_direction_sum += gaze_ratio
-
-            # 고개 돌리는 방향 감지
-            head_direction = get_head_angle_ratio([27, 28, 29, 30, 31, 32, 33, 34, 35], landmarks, frame)
-            direction = head_direction[0]
-            direction_ratio = head_direction[1]
-
-            """# 눈을 추적하며 깜박임 감지
-            if get_blinking_ratio(landmarks) > 3.7:  # 숫자가 높아질수록 엄격하게 감지
-                print("눈 깜빡임")"""
-
-            # 눈동자가 인가된 범위를 벗어나면 경고
-            warn_eye_direction(criteria_finished, gaze_ratio, eye_direction_criteria, margin_eye)
-
-            # 고개가 인가된 범위를 벗어나면 경고
-            warn_head_direction(criteria_finished, head_direction_criteria, head_direction, margin_head)
-
-
-            # 최초 100프레임동안 고개, 눈동자 기준설정
-            if not criteria_finished:
-                print("기준 설정")
-                head_direction_criteria, eye_direction_criteria, criteria_finished, num_frames \
-                    = set_criteria(direction, head_direction_sum,
-                                   criteria_finished, direction_ratio, eye_direction_sum)
-
-
-            if (wrong_eye_direction or wrong_head_direction):
-                eyetracking_score -= 2/30
-        cv2.imshow("Frame", frame)
-        key = cv2.waitKey(1)
-        '''
-        # Print ont the screen
-        if temp_faces_for_compare[2]:
-            cv2.imshow("Frame", frame)
-            key = cv2.waitKey(1)
-        else:
-            key = cv2.waitKey(1)
-            cv2.destroyAllWindows()
-        '''
-
-        # ESC 입력시 프로그램 종료
-        if key == 27:
-            break
-
-    cap.release()
-    cv2.destroyAllWindows()
     return eyetracking_score
 
 if __name__ == "__main__":
-   val = calculate_eyetracking()
-   print("점수: ",val)
-
-# 바로 신원인식하면 에러뜸
+    a = 1
+#    val = calculate_eyetracking()
+#    print("점수: ",val)

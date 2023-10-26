@@ -3,32 +3,17 @@
 
 # 데이터 확인
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
-
-# Dataset 만들기
-import keras
-from keras.utils import to_categorical
 
 # Detect Face
 import cv2
 from scipy.ndimage import zoom
 
 # Model
-from keras.models import Sequential
-from keras.layers.convolutional import Conv2D, MaxPooling2D
-from keras.layers.core import Dense, Dropout, Activation, Flatten
-from keras.layers.normalization import batch_normalization
-from keras.models import Model, load_model
-from keras.preprocessing.image import ImageDataGenerator
+from keras.models import load_model
 
 shape_x = 48
 shape_y = 48
-
-# 라벨 숫자를 문자로 변경
-def get_label(argument):
-    labels = {0:'angry', 1:'disgust', 2:'fear', 3:'happy', 4:'sad', 5:'surprise', 6:'neutral'}
-    return(labels.get(argument, 'Invalid emotion'))
 
 # 전체 이미지에서 얼굴을 찾아내는 함수
 def detect_face(frame):
@@ -82,19 +67,23 @@ def extract_face_features(gray, detected_faces, coord, offset_coefficients=(0.07
 suzy = cv2.imread('dataset/image.jpeg')
 plt.imshow(cv2.cvtColor(suzy, cv2.COLOR_BGR2RGB))
 
-def calculate_emotion(image):
+def calculate_emotion(frame):
     model = load_model('emotion_recognition.h5')
-    # 원본이미지 확인
-    face = cv2.imread(image)
-
+    
     # 얼굴 추출
-    gray, detected_faces, coord = detect_face(face)
+    gray, detected_faces, coord = detect_face(frame)
     face_zoom = extract_face_features(gray, detected_faces, coord)
 
     # 모델 추론
     input_data = np.reshape(face_zoom[0].flatten(), (1, 48, 48, 1))
     output_data = model.predict(input_data)
+    
+    '''
     emotion_array = ['angry','disgust','fear','happy','sad','surprise','neutral'];
 
     for i in range(output_data.shape[1]):
         print(f'{emotion_array[i]}: {(output_data[0][i] / sum(output_data[0]))*100}')
+    '''
+
+    emotion_score = round(output_data[0][-1] / sum(output_data[0]), 4)
+    return emotion_score
