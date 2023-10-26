@@ -29,7 +29,8 @@ def check_dat():
 if __name__ == "__main__":
     check_dat()
     
-    cap = cv2.VideoCapture(0)
+    # cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture('test.mov')
 
     while True:
         _, frame = cap.read()
