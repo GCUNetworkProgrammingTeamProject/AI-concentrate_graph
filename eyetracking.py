@@ -39,8 +39,9 @@ max_short_cheating = 5  # 짧은 시간 부정행위 횟수
 max_long_cheating = 1   # 짧은 시간 부정행위 횟수
 criteria_time = 5       # 짧은 시간 긴 시간 나누는 기준초
 
-path = "/Users/jihyeokchoi/Desktop/AI-concentrate_graph/" # path 변경
-path_identification = "/Users/jihyeokchoi/Desktop/AI-concentrate_graph/"
+# path = "/Users/jihyeokchoi/Desktop/AI-concentrate_graph/" # path 변경
+path = "C:\\Users\\jihyeok\\Desktop\\project\\AI-concentrate_graph\\"
+# path_identification = "/Users/jihyeokchoi/Desktop/AI-concentrate_graph/"
 filename = "video_"
 
 """ determine mid point
@@ -334,7 +335,7 @@ def calculate_eyetracking(gray, frame):
     eyetracking_score = 0
 
     detector = dlib.get_frontal_face_detector()
-    predictor = dlib.shape_predictor("/Users/jihyeokchoi/Desktop/AI-concentrate_graph/data/shape_predictor_68_face_landmarks.dat")
+    predictor = dlib.shape_predictor("C:\\Users\\jihyeok\\Desktop\\project\\AI-concentrate_graph\\data\\shape_predictor_68_face_landmarks.dat")
 
     # 얼굴 인식 활성화 여부 확인
     Activated = False

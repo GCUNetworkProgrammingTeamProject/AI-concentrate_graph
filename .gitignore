@@ -162,4 +162,5 @@ cython_debug/
 .DS_store
 data/shape_predictor_68_face_landmarks.dat
 *.jpeg
-*.mov
+data/*.mp4
+test.py

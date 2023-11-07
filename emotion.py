@@ -62,7 +62,8 @@ def extract_face_features(gray, detected_faces, coord, offset_coefficients=(0.07
     return new_face
 
 def calculate_emotion(frame):
-    model = load_model('emotion_recognition.h5')
+    # model = load_model('emotion_recognition.h5')
+    model = load_model("C:\\Users\\jihyeok\\Desktop\\project\\AI-concentrate_graph\\data\\emotion_recognition.h5")
     
     # 얼굴 추출
     gray, detected_faces, coord = detect_face(frame)
