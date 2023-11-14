@@ -72,12 +72,14 @@ if __name__ == "__main__":
     cap.release()
     cv2.destroyAllWindows()
 '''
-def concentrate():
+def concentrate(url):
     emotion_score, eyetracking_score, sec, frame_count = 0.0, 0.0, 0, 0
     concentrate_score = {}
     # check_dat()
     # cap = cv2.VideoCapture(0)
-    cap = cv2.VideoCapture("C:\\Users\\jihyeok\\Desktop\\project\\AI-concentrate_graph\\data\\test2.mp4")
+    # cap = cv2.VideoCapture("C:\\Users\\jihyeok\\Desktop\\project\\AI-concentrate_graph\\data\\test2.mp4")
+    cap = cv2.VideoCapture(url)
+
 
     while True:
         _, frame = cap.read()
@@ -103,12 +105,12 @@ def concentrate():
             eyetracking_score += eyetracking.calculate_eyetracking(gray, frame)
         
 
-        cv2.imshow("Frame", frame)
-        key = cv2.waitKey(1)
+        # cv2.imshow("Frame", frame)
+        # key = cv2.waitKey(1)
 
-        # ESC or 'q' 입력시 프`로그램 종료
-        if key == 27 or key == 113:
-            break
+        # # ESC or 'q' 입력시 프`로그램 종료
+        # if key == 27 or key == 113:
+        #     break
         
     
     # 그래프

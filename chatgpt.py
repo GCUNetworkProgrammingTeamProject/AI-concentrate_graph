@@ -31,6 +31,10 @@ def chatgpt(c):
         model = 'gpt-3.5-turbo',
         messages = messages
     )
+    res = completion.choices[0].message
     res = completion.choices[0].message.content
     return res
-    
+
+if __name__ == "__main__":
+    c = "what is apple"
+    print(chatgpt(c))
