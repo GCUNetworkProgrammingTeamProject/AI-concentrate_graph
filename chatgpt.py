@@ -31,7 +31,7 @@ def chatgpt(c):
         model = 'gpt-3.5-turbo',
         messages = messages
     )
-    res = completion.choices[0].message
+    # res = completion.choices[0].message
     res = completion.choices[0].message.content
     return res
 

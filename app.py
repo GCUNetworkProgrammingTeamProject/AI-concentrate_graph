@@ -70,11 +70,11 @@ def send_concentrate(url):
     data = concentrate(url)
     return jsonify(data)
 
-# @app.route('chatgpt')
-# def send_concentrate(url):
-#     q = request.args.get('q')
-#     data = chatgpt(q)
-#     return jsonify(data)
+@app.route('/chatgpt')
+def send_chatgpt(url):
+    q = request.args.get('q')
+    data = chatgpt(q)
+    return jsonify(data)
 
 '''
 @app.route('/concentrate')
@@ -150,4 +150,4 @@ def show_chatgpt():
 '''
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=True)
+    app.run('0.0.0.0', port=7000, debug=True)
