@@ -72,12 +72,14 @@ if __name__ == "__main__":
     cap.release()
     cv2.destroyAllWindows()
 '''
-def concentrate(url):
+def concentrate(videoName):
     emotion_score, eyetracking_score, sec, frame_count = 0.0, 0.0, 0, 0
     concentrate_score = {}
     # check_dat()
     # cap = cv2.VideoCapture(0)
     # cap = cv2.VideoCapture("C:\\Users\\jihyeok\\Desktop\\project\\AI-concentrate_graph\\data\\test2.mp4")
+    url = "/home/t23209/educrat/public/assests/analysisVideo/" + videoName
+    print("경로: ",url)
     cap = cv2.VideoCapture(url)
 
 

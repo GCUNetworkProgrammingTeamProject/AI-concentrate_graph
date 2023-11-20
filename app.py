@@ -65,9 +65,12 @@ def index():
     return render_template('index.html')  # Render the index.html template
 
 @app.route('/concentrate')
-def send_concentrate(url):
-    url = request.args.get('url')
-    data = concentrate(url)
+def send_concentrate():
+    print("백에서 값이 전달되었습니다.")
+    videoName = request.args.get('videoName')
+    print("백에서 전달된 값: ",videoName)
+    data = concentrate(videoName)
+    print("반환하는 값: ",data)
     return jsonify(data)
 
 @app.route('/chatgpt')
